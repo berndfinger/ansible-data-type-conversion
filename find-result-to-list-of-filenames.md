@@ -1,10 +1,11 @@
 The file names as a result of a call to the find module are stored in:
-a dict, containing (among others):
-  a list named "files", each element being:
-    a dict containing (among others) an element named "path" with the value of the absolute path name of the file.
+a **dict**, containing (among others):
+  a **list** named `files`, each element being:
+    a **dict** containing (among others) an element named `path` with the value of the absolute path name of the file.
 
 Example:
-  - name: Find all files of a pattern
+```yaml
+- name: Find all files of a pattern
     find:
       paths:
         - /tmp
@@ -12,8 +13,10 @@ Example:
         - "file-*.txt"
     register: __register_find_result
     changed_when: no
+```
 
 Output:
+```yaml
 __register_find_result: {
         "changed": false,
         "examined": 49,
@@ -39,13 +42,17 @@ __register_find_result: {
         "msg": "All paths examined",
         "skipped_paths": {}
    }
+```
 
 You can access a single element of the variable find_result as follows:
+```yaml
   - name: Show the first path of variable find_result
     debug:
       msg: "{{ __register_find_result.files[0].path }}"
+```
       
 You can copy the resulting file names into a new list as follows:
+```yaml
   - name: Create list of files from the find result
     set_fact:
       __fact_filenames: "{{ __fact_filenames|d([]) + [ item.path ] }}"
@@ -54,8 +61,10 @@ You can copy the resulting file names into a new list as follows:
   - name: Display the resulting list
     debug:
       var: __fact_filenames
+```
 
 Output:
+```yaml
 TASK [Display the resulting list] **********************************************************************************************************
 ok: [localhost] => {
     "__fact_filenames": [
@@ -63,3 +72,4 @@ ok: [localhost] => {
         "/tmp/file-02.txt",
     ]
 }
+```

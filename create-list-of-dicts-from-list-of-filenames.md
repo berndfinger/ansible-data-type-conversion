@@ -1,0 +1,31 @@
+For creating a list of dicts, each one containing the directory name and the file name from a list of absolute file names
+(see also [Convert the result of a call to the find module to a list of filenames](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/find-result-to-list-of-filenames.md)),
+use the following code:
+
+```yaml
+  - name: Convert the list of absolute file names into a list of directories and file names from the find result
+    set_fact:
+      __fact_dir_filenames: "{{ __fact_dir_filenames|d([]) + [ __new_dict ] }}"
+    with_items: "{{ __fact_filenames }}"
+    vars:
+      __new_dict:
+        dir: "{{ item | dirname }}"
+        file: "{{ item | basename }}"
+```
+
+Output:
+```yaml
+TASK [Display the resulting list] **********************************************************************************************************
+ok: [localhost] => {
+    "__fact_dir_filenames": [
+        {
+            "dir": "/var/tmp",
+            "file": "file-01.txt"
+        },
+        {
+            "dir": "/var/tmp",
+            "file": "file-02.txt"
+        }
+    ]
+}
+```

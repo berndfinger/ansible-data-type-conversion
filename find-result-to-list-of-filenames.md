@@ -1,7 +1,7 @@
-The file names as a result of a call to the find module are stored in:
-a **dict**, containing (among others):
-  a **list** named `files`, each element being:
-    a **dict** containing (among others) an element named `path` with the value of the absolute path name of the file.
+The file names as a result of a call to the find module are stored in:  
+a **dict**, containing (among others):  
+  a **list** named `files`, each element being:  
+    a **dict** containing (among others) an element named `path` with the value of the absolute path name of the file.  
 
 Example:
 ```yaml

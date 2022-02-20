@@ -1,0 +1,22 @@
+---
+
+- name: create-list-of-dicts-from-list-of-filenames
+  hosts: localhost
+  vars:
+    __fact_filenames:
+      - '/var/tmp/file-01.txt'
+      - '/var/tmp/file-02.txt'
+
+  tasks:
+  - name: Convert a list of absolute file names into a list of directories and file names
+    set_fact:
+      __fact_dir_filenames: "{{ __fact_dir_filenames|d([]) + [ __new_dict ] }}"
+    with_items: "{{ __fact_filenames }}"
+    vars:
+      __new_dict:
+        dir: "{{ item | dirname }}"
+        file: "{{ item | basename }}"
+
+  - name: Display the resulting list of dicts
+    debug:
+      var: __fact_dir_filenames

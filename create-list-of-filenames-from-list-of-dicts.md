@@ -3,6 +3,7 @@ The yml file is [here](https://github.com/berndfinger/ansible-data-type-conversi
 A list of dicts with directory and file names as the result of a [conversion from a list of absolute file names](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/create-list-of-dicts-from-list-of-filenames.md)
 can be converted back to a list of files, as follows:
 
+Code:
 ```
   - name: Create a list of files from a list of dicts of directory and file name
     set_fact:
@@ -12,4 +13,15 @@ can be converted back to a list of files, as follows:
   - name: Display the resulting list of files
     debug:
       var: __fact_filenames_only
+```
+
+Output:
+```
+TASK [Display the resulting list of files] *************************************************************************************************
+ok: [localhost] => {
+    "__fact_filenames_only": [
+        "file-01.txt",
+        "file-02.txt"
+    ]
+}
 ```

@@ -4,7 +4,7 @@ The file names as a result of a call to the find module are stored in:
         - a **dict**, containing (among others)
             - an element named `path` with the value of the absolute path name of the file.  
 
-Code:
+[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-find-module.yml):
 ```yaml
   - name: Find all files of a pattern
     ansible.builtin.find:
@@ -46,7 +46,6 @@ __register_find_result: {
 ```
 
 You can access a single element of the variable find_result as follows:
-Code:
 ```yaml
   - name: Show the first path of variable find_result
     debug:
@@ -61,7 +60,6 @@ ok: [localhost] => {
 ```
 
 You can copy the resulting file names into a new list as follows:
-Code:
 ```yaml
   - name: Create list of absolute file names from the find result
     set_fact:

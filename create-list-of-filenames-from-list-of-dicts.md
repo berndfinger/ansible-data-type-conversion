@@ -3,7 +3,7 @@ can be converted back to a list of files, as follows:
 
 [Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-list-of-dicts.yml):
 ```
-  - name: Create a list of files from a list of dicts of directory and file name
+  - name: Convert a list of dicts of directory and file name into a list of files
     set_fact:
       __fact_filenames_only: "{{ __fact_filenames_only|d([]) + [ item.file ] }}"
     loop: "{{ __fact_dir_filenames }}"

@@ -9,7 +9,7 @@ For creating a string with items separated by spaces from a list, use `map('quot
     set_fact:
       __fact_filenames_arg_list: "{{ __fact_filenames_only | map('quote') | join(' ') }}"
 
-  - name: Display list of files
+  - name: Display concatenated string
     debug:
       msg: "{{ __fact_filenames_arg_list }}"
 ```

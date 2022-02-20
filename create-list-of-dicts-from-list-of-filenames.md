@@ -3,7 +3,7 @@ For creating a list of dicts, each one containing the directory name and the fil
 use the following code:
 
 ```yaml
-  - name: Convert the list of absolute file names into a list of directories and file names from the find result
+  - name: Convert a list of absolute file names into a list of directories and file names
     set_fact:
       __fact_dir_filenames: "{{ __fact_dir_filenames|d([]) + [ __new_dict ] }}"
     with_items: "{{ __fact_filenames }}"
@@ -11,6 +11,10 @@ use the following code:
       __new_dict:
         dir: "{{ item | dirname }}"
         file: "{{ item | basename }}"
+
+  - name: Display the resulting list of dicts
+    debug:
+      var: __fact_dir_filenames
 ```
 
 Output:

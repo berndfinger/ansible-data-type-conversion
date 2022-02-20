@@ -1,0 +1,18 @@
+---
+
+- name: create-list-of-filenames-from-list-of-dicts
+  hosts: localhost
+  vars:
+    __fact_dir_filenames:
+      - { dir: '/var/tmp', file: 'file-01.txt' }
+      - { dir: '/var/tmp', file: 'file-02.txt' }
+
+  tasks:
+  - name: Create list of files from the find result
+    set_fact:
+      __fact_filenames_only: "{{ __fact_filenames_only|d([]) + [ item.file ] }}"
+    loop: "{{ __fact_dir_filenames }}"
+
+  - name: Display the resulting list of files
+    debug:
+      var: __fact_filenames_only

@@ -8,7 +8,7 @@
       - { dir: '/var/tmp', file: 'file-02.txt' }
 
   tasks:
-  - name: Create list of files from the find result
+  - name: Create a list of files from a list of dicts of directory and file names
     set_fact:
       __fact_filenames_only: "{{ __fact_filenames_only|d([]) + [ item.file ] }}"
     loop: "{{ __fact_dir_filenames }}"

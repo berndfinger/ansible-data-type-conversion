@@ -2,6 +2,7 @@ A list of dicts with directory and file names as the result of a [conversion fro
 (https://github.com/berndfinger/ansible-data-type-conversion/blob/main/create-list-of-dicts-from-list-of-filenames.md)
 can be converted back to a list of files, as follows:
 
+```
   - name: Create list of files from the find result
     set_fact:
       __fact_filenames_only: "{{ __fact_filenames_only|d([]) + [ item.file ] }}"
@@ -10,3 +11,4 @@ can be converted back to a list of files, as follows:
   - name: Display list of files
     debug:
       msg: "{{ __fact_filenames_only }}"
+```

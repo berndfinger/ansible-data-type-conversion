@@ -3,7 +3,7 @@ For creating a string with items separated by spaces from a list, use `map('quot
 [Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-space-separated-string-of-items-from-list.yml):
 ```
   tasks:
-  - name: Convert list to space separated string, e.g. as part of an argument list
+  - name: Convert a list of file names to a space separated string, e.g. as part of an argument list
     set_fact:
       __fact_filenames_arg_list: "{{ __fact_filenames | map('quote') | join(' ') }}"
 

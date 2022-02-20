@@ -4,7 +4,7 @@ A list of dicts with directory and file names as the result of a [conversion fro
 can be converted back to a list of files, as follows:
 
 ```
-  - name: Create a list of files from a list of dicts of directory and file names
+  - name: Create a list of files from a list of dicts of directory and file name
     set_fact:
       __fact_filenames_only: "{{ __fact_filenames_only|d([]) + [ item.file ] }}"
     loop: "{{ __fact_dir_filenames }}"

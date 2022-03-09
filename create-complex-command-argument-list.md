@@ -1,4 +1,4 @@
-For creating a complex argument list with items separated by spaces from a list, with each item prepended by a string, use `product()*, `map('join')`, and `list`. For constructing the complete command, use `map('quote')` and `join(' ')`.
+For creating a complex argument list with items separated by spaces from a list, with each item prepended by a string, use `product()`, `map('join')`, and `list`. For constructing the complete command, use `map('quote')` and `join(' ')`.
 
 [Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-complex-command-argument-list.yml):
 ```yaml

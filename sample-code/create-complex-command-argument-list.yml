@@ -1,0 +1,55 @@
+---
+
+- name: create-complex-command-argument-list
+  hosts: localhost
+  gather_facts: no
+  vars:
+    sap_hana_install_number: '77'
+# The firewall variable used here is built as required by role linux_system_roles.firewall
+# See https://github.com/linux-system-roles/firewall
+    firewall:
+      - { port:
+          ['1128/tcp',
+           '1129/tcp',
+           '43{{ sap_hana_install_number }}/tcp',
+           '5050/tcp',
+           '9090/tcp',
+           '9091/tcp',
+           '9092/tcp',
+           '9093/tcp',
+           '3{{ sap_hana_install_number }}00-3{{ sap_hana_install_number }}90/tcp',
+           '30105/tcp',
+           '30107/tcp',
+           '30140/tcp',
+           '4{{ sap_hana_install_number }}01/tcp',
+           '4{{ sap_hana_install_number }}02/tcp',
+           '4{{ sap_hana_install_number }}06/tcp',
+           '4{{ sap_hana_install_number }}12/tcp',
+           '4{{ sap_hana_install_number }}14/tcp',
+           '4{{ sap_hana_install_number }}40/tcp',
+           '5{{ sap_hana_install_number }}00/tcp',
+           '5{{ sap_hana_install_number }}13/tcp',
+           '5{{ sap_hana_install_number }}14/tcp',
+           '51000/tcp',
+           '64997/tcp'],
+          state: 'enabled'
+        }
+
+  tasks:
+  - name: Convert a list of ports into a list of arguments prepended by a string, for firewalld-cmd
+    ansible.builtin.set_fact:
+      __fact_firewall_cmd_args:
+        "{{ ['--add-port='] | product(firewall[0].port) | map('join') | list }}"
+
+  - name: Display the argument list
+    ansible.builtin.debug:
+      var: __fact_firewall_cmd_args
+
+  - name: Build the final firewall-cmd command string
+    ansible.builtin.set_fact:
+      __fact_firewall_cmd_command:
+        "firewall-cmd --zone=public {{ __fact_firewall_cmd_args | map('quote') | join(' ') }}"
+
+  - name: Display the firewall-cmd command
+    ansible.builtin.debug:
+      var: __fact_firewall_cmd_command

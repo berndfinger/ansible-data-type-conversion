@@ -36,20 +36,20 @@
         }
 
   tasks:
-  - name: Convert a list of ports into a list of arguments prepended by a string, for firewalld-cmd
-    ansible.builtin.set_fact:
-      __fact_firewall_cmd_args:
-        "{{ ['--add-port='] | product(firewall[0].port) | map('join') | list }}"
+    - name: Convert a list of ports into a list of arguments prepended by a string, for firewalld-cmd
+      ansible.builtin.set_fact:
+        __fact_firewall_cmd_args:
+          "{{ ['--add-port='] | product(firewall[0].port) | map('join') | list }}"
 
-  - name: Display the argument list
-    ansible.builtin.debug:
-      var: __fact_firewall_cmd_args
+    - name: Display the argument list
+      ansible.builtin.debug:
+        var: __fact_firewall_cmd_args
 
-  - name: Build the final firewall-cmd command string
-    ansible.builtin.set_fact:
-      __fact_firewall_cmd_command:
-        "firewall-cmd --zone=public {{ __fact_firewall_cmd_args | map('quote') | join(' ') }}"
+    - name: Build the final firewall-cmd command string
+      ansible.builtin.set_fact:
+        __fact_firewall_cmd_command:
+          "firewall-cmd --zone=public {{ __fact_firewall_cmd_args | map('quote') | join(' ') }}"
 
-  - name: Display the firewall-cmd command
-    ansible.builtin.debug:
-      var: __fact_firewall_cmd_command
+    - name: Display the firewall-cmd command
+      ansible.builtin.debug:
+        var: __fact_firewall_cmd_command

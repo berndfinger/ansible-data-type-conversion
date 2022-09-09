@@ -1,0 +1,26 @@
+---
+
+- name: create-list-of-all-upper-level-directories-from-a-directory-string
+  hosts: localhost
+  vars:
+    - _dir: '/software/subdir1/subdir2/subdir3/subdir4/'
+    - __fact_dirname: ''
+
+  tasks:
+    - name: Normalize directory path - remove a "/" from the end of the string if present
+      ansible.builtin.set_fact:
+        __fact_dir_normalized: "{{ _dir | regex_replace('\\/$', '') }}"
+
+    - name: Determine the number of directory levels
+      ansible.builtin.set_fact:
+        __fact_directory_levels: "{{ __fact_dir_normalized | regex_findall('/') | length }}"
+
+    - name: Fill the list of directories
+      ansible.builtin.include_tasks: ./dir-to-list-of-dirs-loop-block.yml
+      loop: "{{ range(1,__fact_directory_levels|int+1,1)|list }}"
+      loop_control:
+        loop_var: line_item
+
+    - name: Display the resulting list of directories
+      ansible.builtin.debug:
+        var: __fact_directories

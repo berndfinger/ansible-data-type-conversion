@@ -5,28 +5,28 @@
   vars:
 
   tasks:
-  - name: Find all files of a pattern
-    ansible.builtin.find:
-      paths:
-        - /var/tmp
-      patterns:
-        - "file-*.txt"
-    register: __register_find_result
-    changed_when: no
+    - name: Find all files of a pattern
+      ansible.builtin.find:
+        paths:
+          - /var/tmp
+        patterns:
+          - "file-*.txt"
+      register: __register_find_result
+      changed_when: no
 
-  - name: Display the result of the find module
-    debug:
-      var: __register_find_result
+    - name: Display the result of the find module
+      ansible.builtin.debug:
+        var: __register_find_result
 
-  - name: Show the first path of variable find_result
-    debug:
-      msg: "{{ __register_find_result.files[0].path }}"
+    - name: Show the first path of variable find_result
+      ansible.builtin.debug:
+        msg: "{{ __register_find_result.files[0].path }}"
 
-  - name: Create list of absolute file names from the find result
-    set_fact:
-      __fact_filenames: "{{ __fact_filenames|d([]) + [ item.path ] }}"
-    loop: "{{ __register_find_result.files }}"
+    - name: Create list of absolute file names from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames: "{{ __fact_filenames|d([]) + [ item.path ] }}"
+      loop: "{{ __register_find_result.files }}"
 
-  - name: Display the resulting list of absolute file names
-    debug:
-      var: __fact_filenames
+    - name: Display the resulting list of absolute file names
+      ansible.builtin.debug:
+        var: __fact_filenames

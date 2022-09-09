@@ -8,10 +8,10 @@
       - '/var/tmp/file-02.txt'
 
   tasks:
-  - name: Convert a list of file names to a space separated string, e.g. as part of an argument list
-    set_fact:
-      __fact_filenames_arg_list: "{{ __fact_filenames | map('quote') | join(' ') }}"
+    - name: Convert a list of file names to a space separated string, e.g. as part of an argument list
+      ansible.builtin.set_fact:
+        __fact_filenames_arg_list: "{{ __fact_filenames | map('quote') | join(' ') }}"
 
-  - name: Display resulting argument list
-    debug:
-      var: __fact_filenames_arg_list
+    - name: Display resulting argument list
+      ansible.builtin.debug:
+        var: __fact_filenames_arg_list

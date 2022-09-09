@@ -1,0 +1,8 @@
+# This loop block is necessary because setting the two variables in one set_fact task leads to incorrect results.
+- name: Set __fact_dirname
+  ansible.builtin.set_fact:
+    __fact_dirname: "{{ (__fact_dirname + '/' + __fact_dir_normalized.split(\"/\")[line_item|int])|string }}"
+
+- name: Set __fact_directories
+  ansible.builtin.set_fact:
+    __fact_directories: "{{ __fact_directories|d([]) + [ __fact_dirname ] }}"

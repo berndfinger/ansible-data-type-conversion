@@ -4,7 +4,7 @@ The file names as a result of a call to the find module are stored in:
         - a **dict**, containing (among others)
             - an element named `path` with the value of the absolute path name of the file.
 
-[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-find-module-using-map.yml):
+[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-vars-of-filenames-from-find-module-using-map.yml):
 ```yaml
     - name: Find all files of a pattern
       ansible.builtin.find:

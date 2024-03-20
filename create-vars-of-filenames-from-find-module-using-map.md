@@ -1,0 +1,151 @@
+The file names as a result of a call to the find module are stored in:
+- a **dict**, containing (among others):
+    - a **list** named `files`, each element being:
+        - a **dict**, containing (among others)
+            - an element named `path` with the value of the absolute path name of the file.
+
+[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-find-module-using-map.yml):
+```yaml
+    - name: Find all files of a pattern
+      ansible.builtin.find:
+        paths:
+          - /var/tmp
+        patterns:
+          - "file-*.txt"
+      register: __register_find_result
+      changed_when: no
+```
+
+Output:
+```yaml
+__register_find_result: {
+        "changed": false,
+        "examined": 49,
+        "failed": false,
+        "files": [
+            {
+                "atime": 1644591074.602834,
+                "ctime": 1644591071.2867982,
+                "dev": 64770,
+...
+                "path": "/var/tmp/file-01.txt",
+...
+            },
+            {
+                "atime": 1644591061.6116943,
+                "ctime": 1644591045.2365181,
+                "dev": 64770,
+...
+                "path": "/var/tmp/file-02.txt",
+...
+        ],
+        "matched": 2,
+        "msg": "All paths examined",
+        "skipped_paths": {}
+   }
+```
+
+You can access a single element of the variable find_result as follows:
+```yaml
+    - name: Show the first path of variable find_result
+      debug:
+        msg: "{{ __register_find_result.files[0].path }}"
+```
+
+Output:
+```
+ok: [localhost] => {
+    "msg": "/var/tmp/file-01.txt"
+}
+```
+
+You can copy the resulting *absolute* file names into a new list as follows:
+```yaml
+    - name: Set fact of absolute file names from the find result
+     ansible.builtin.set_fact:
+       __fact_filenames: >-
+         {{ __register_find_result.files
+           | map(attribute = 'path')
+           | sort }}
+
+    - name: Display the resulting list of absolute file names
+      debug:
+        var: __fact_filenames
+```
+
+Output:
+```yaml
+TASK [Display the resulting list of absolute file names] ***********************************************************************************
+ok: [localhost] =>
+  __fact_filenames:
+  - /var/tmp/file-01.txt
+  - /var/tmp/file-02.txt
+```
+
+You can copy the resulting *relative* file names into a new list as follows:
+```yaml
+    - name: Set fact of relative file names from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_filename_only: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | map('basename')
+            | list
+            | sort }}
+
+    - name: Display the resulting list of relative file names
+      ansible.builtin.debug:
+        var: __fact_filenames_filename_only
+```
+
+Output:
+```yaml
+TASK [Display the resulting list of relative file names] ***********************************************************************************
+ok: [localhost] =>
+  __fact_filenames_filename_only:
+  - file-01.txt
+  - file-02.txt
+```
+
+You can copy the highest *absolute* file name into a new variable as follows:
+```yaml
+    - name: Set fact of the highest absolute file name from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_highest: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | sort | last }}
+
+    - name: Display the highest absolute file name
+      ansible.builtin.debug:
+        var: __fact_filenames_highest
+```
+
+Output:
+```yaml
+TASK [Display the highest absolute file name] **********************************************************************************************
+ok: [localhost] =>
+  __fact_filenames_highest: /var/tmp/file-02.txt
+```
+
+You can copy the highest *relative* file name into a new variable as follows:
+```yaml
+    - name: Set fact of the highest file name (basename) from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_highest_filename_only: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | map('basename')
+            | sort | last }}
+
+    - name: Display the highest relative file name
+      ansible.builtin.debug:
+        var: __fact_filenames_highest_filename_only
+```
+
+Output:
+```yaml
+TASK [Display the highest relative file name] **********************************************************************************************
+ok: [localhost] =>
+  __fact_filenames_highest_filename_only: file-02.txt
+```

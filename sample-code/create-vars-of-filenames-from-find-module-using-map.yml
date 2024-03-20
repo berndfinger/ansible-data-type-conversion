@@ -1,0 +1,72 @@
+---
+
+- name: create-list-of-filenames-from-find-module
+  hosts: localhost
+  vars:
+
+  gather_facts: false
+
+  tasks:
+    - name: Find all files of a pattern
+      ansible.builtin.find:
+        paths:
+          - /var/tmp
+        patterns:
+          - "file-*.txt"
+      register: __register_find_result
+      changed_when: no
+
+    - name: Display the result of the find module
+      ansible.builtin.debug:
+        var: __register_find_result
+
+    - name: Show the first path of variable find_result
+      ansible.builtin.debug:
+        msg: "{{ __register_find_result.files[0].path }}"
+
+    - name: Set fact of absolute file names from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | sort }}
+
+    - name: Display the resulting list of absolute file names
+      ansible.builtin.debug:
+        var: __fact_filenames
+
+    - name: Set fact of relative file names from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_filename_only: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | map('basename')
+            | list
+            | sort }}
+
+    - name: Display the resulting list of relative file names
+      ansible.builtin.debug:
+        var: __fact_filenames_filename_only
+
+    - name: Set fact of the highest absolute file name from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_highest: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | sort | last }}
+
+    - name: Display the highest absolute file name
+      ansible.builtin.debug:
+        var: __fact_filenames_highest
+
+    - name: Set fact of the highest file name (basename) from the find result
+      ansible.builtin.set_fact:
+        __fact_filenames_highest_filename_only: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | map('basename')
+            | sort | last }}
+
+    - name: Display the highest relative file name
+      ansible.builtin.debug:
+        var: __fact_filenames_highest_filename_only

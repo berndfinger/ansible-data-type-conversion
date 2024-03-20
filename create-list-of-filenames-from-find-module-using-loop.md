@@ -1,10 +1,10 @@
-The file names as a result of a call to the find module are stored in:  
-- a **dict**, containing (among others):  
-    - a **list** named `files`, each element being:  
+The file names as a result of a call to the find module are stored in:
+- a **dict**, containing (among others):
+    - a **list** named `files`, each element being:
         - a **dict**, containing (among others)
-            - an element named `path` with the value of the absolute path name of the file.  
+            - an element named `path` with the value of the absolute path name of the file.
 
-[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-find-module.yml):
+[Code](https://github.com/berndfinger/ansible-data-type-conversion/blob/main/sample-code/create-list-of-filenames-from-find-module-using-loop.yml):
 ```yaml
   - name: Find all files of a pattern
     ansible.builtin.find:
@@ -65,7 +65,7 @@ You can copy the resulting file names into a new list as follows:
     set_fact:
       __fact_filenames: "{{ __fact_filenames|d([]) + [ item.path ] }}"
     loop: "{{ __register_find_result.files }}"
-  
+
   - name: Display the resulting list of absolute file names
     debug:
       var: __fact_filenames

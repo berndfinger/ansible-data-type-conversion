@@ -10,9 +10,10 @@
     - name: Find all files of a pattern
       ansible.builtin.find:
         paths:
-          - /var/tmp
+          - /var/tmp/find-test
         patterns:
           - "file-*.txt"
+        recurse: true
       register: __register_find_result
       changed_when: no
 
@@ -35,9 +36,21 @@
       ansible.builtin.debug:
         var: __fact_filenames
 
+    - name: Set fact of absolute file names from the find result, excluding files from a certain directory, example `extracted`
+      ansible.builtin.set_fact:
+        __fact_filenames: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | reject('contains', 'extracted/')
+            | sort }}
+
+    - name: Display the resulting list of absolute file names, excluding those from directory 'extracted/'
+      debug:
+        var: __fact_filenames
+
     - name: Set fact of relative file names from the find result
       ansible.builtin.set_fact:
-        __fact_filenames_filename_only: >-
+        __fact_filenames_relative: >-
           {{ __register_find_result.files
             | map(attribute = 'path')
             | map('basename')
@@ -46,7 +59,7 @@
 
     - name: Display the resulting list of relative file names
       ansible.builtin.debug:
-        var: __fact_filenames_filename_only
+        var: __fact_filenames_relative
 
     - name: Set fact of the highest absolute file name from the find result
       ansible.builtin.set_fact:
@@ -61,7 +74,7 @@
 
     - name: Set fact of the highest file name (basename) from the find result
       ansible.builtin.set_fact:
-        __fact_filenames_highest_filename_only: >-
+        __fact_filenames_highest_relative: >-
           {{ __register_find_result.files
             | map(attribute = 'path')
             | map('basename')
@@ -69,4 +82,17 @@
 
     - name: Display the highest relative file name
       ansible.builtin.debug:
-        var: __fact_filenames_highest_filename_only
+        var: __fact_filenames_highest_relative
+
+    - name: Set fact of the highest file name (basename) from the find result, excluding files from a certain directory
+      ansible.builtin.set_fact:
+        __fact_filenames_highest_relative_filtered: >-
+          {{ __register_find_result.files
+            | map(attribute = 'path')
+            | reject('contains', 'extracted/')
+            | map('basename')
+            | sort | last }}
+
+    - name: Display the highest relative file name, skipping those from directory 'extracted/'
+      ansible.builtin.debug:
+        var: __fact_filenames_highest_relative_filtered
